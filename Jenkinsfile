@@ -1,5 +1,10 @@
 pipeline {
-  agent any
+  agent {
+    dockerfile {
+      filename 'Dockerfile-countries'
+    }
+
+  }
   stages {
     stage('build_countries') {
       parallel {
