@@ -11,7 +11,7 @@ pipeline {
         stage('build_countries') {
           steps {
             echo 'hello'
-            sh 'docker build -f ./Dockerfile-countries -t lamersons/countries:assembly-1.0.1 .'
+            sh 'ls -la'
           }
         }
         stage('build_airports') {
