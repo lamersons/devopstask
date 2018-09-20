@@ -20,7 +20,7 @@ docker build -t countries:assembly-1.0.1 -f Dockerfile-countries .'''
     }
     stage('test_countries') {
       steps {
-        sh 'docker service create --name countries -p9081:8080 --mount type=bind,source=/hosthome/shared_drive/countries/,destination=/opc lamersons/countries:assembly-1.0.1'
+        sh 'docker service create --name countries_test -p9081:8080 --mount type=bind,source=/hosthome/shared_drive/countries/,destination=/opc lamersons/countries:assembly-1.0.1'
       }
     }
   }
