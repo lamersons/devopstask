@@ -10,6 +10,6 @@ HEALTHCHECK --interval=5s \
             CMD curl -f http://127.0.0.1:8080/health/live || exit 1
 
 RUN wget https://s3-eu-west-1.amazonaws.com/devops-assesment/countries-assembly-1.0.1.jar
-EXPOSE 8080:8080
+EXPOSE 8080/tcp
 # run application with this command line
 CMD ["/usr/bin/java", "-jar", "countries-assembly-1.0.1.jar"]
