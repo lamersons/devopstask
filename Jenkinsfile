@@ -1,10 +1,5 @@
 pipeline {
-  agent {
-    docker {
-      image 'openjdk:8-jre-alpine'
-    }
-
-  }
+  agent any
   stages {
     stage('build_countries') {
       parallel {
