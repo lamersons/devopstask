@@ -1,7 +1,7 @@
 pipeline {
   agent {
-    dockerfile {
-      filename 'Dockerfile-countries'
+    docker {
+      image 'openjdk:8-jre-alpine'
     }
 
   }
