@@ -7,9 +7,8 @@ pipeline {
           steps {
             echo 'hello'
             sh 'docker build -t lamersons/countries:assembly-1.0.1 -f Dockerfile-countries .'
-            sh '''docker login -u lamersons -p lpad17
+            sh '''docker login -u lamersons -p lpad17; docker push lamersons/countries:assembly-1.0.1
 '''
-            sh 'docker push lamersons/countries:assembly-1.0.1'
           }
         }
         stage('build_airports') {
