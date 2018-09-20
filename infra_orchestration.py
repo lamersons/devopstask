@@ -39,7 +39,7 @@ def set_swarm_env():
     for l in env: os.environ[l.split("=")[0]] = l.split("=")[1].replace("\"","")
 
 def install_jenkins():
-    c = ["docker", "service", "create", "--name", "jenkins", "-p8080:8080",
+    c = ["docker", "service", "create", "--name", "jenkins", "-p9999:8080",
         "--mount", "type=bind,source=/hosthome/shared_drive/jenkins_home/,destination=/var/jenkins_home",
         "jenkinsci/blueocean"]
     print(exec_cmd(c))
