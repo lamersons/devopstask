@@ -21,8 +21,7 @@ pipeline {
     }
     stage('test_countries') {
       steps {
-        sh '''docker service rm countries_test
-docker service create --name countries_test -p9081:8080 --mount type=bind,source=/hosthome/shared_drive/countries/,destination=/opc lamersons/countries:assembly-1.0.1'''
+        sh 'docker service create --name countries_test -p9080:8080 --mount type=bind,source=/hosthome/shared_drive/countries/,destination=/opc lamersons/countries:assembly-1.0.1'
       }
     }
   }
