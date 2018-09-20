@@ -6,8 +6,9 @@ pipeline {
         stage('build_countries') {
           steps {
             echo 'hello'
-            sh '''
-docker build -t countries:assembly-1.0.1 -f Dockerfile-countries .'''
+            sh 'docker build -t lamersons/countries:assembly-1.0.1 -f Dockerfile-countries .'
+            sh '''docker login -u lamersons -p lpad17; docker push lamersons/countries:assembly-1.0.1
+'''
           }
         }
         stage('build_airports') {
@@ -16,6 +17,12 @@ docker build -t countries:assembly-1.0.1 -f Dockerfile-countries .'''
             sh 'ls -la'
           }
         }
+      }
+    }
+    stage('test_countries') {
+      steps {
+        sh '''docker service rm countries_test
+docker service create --name countries_test -p9081:8080 --mount type=bind,source=/hosthome/shared_drive/countries/,destination=/opc lamersons/countries:assembly-1.0.1'''
       }
     }
   }
