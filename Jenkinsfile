@@ -18,7 +18,7 @@ pipeline {
     }
   }
   environment {
-    DOCKER_CERT_PATH = '.docker/machine/machines/node-1'
+    DOCKER_CERT_PATH = '.'
     DOCKER_TLS_VERIFY = '1'
     DOCKER_HOST = 'tcp://192.168.99.134:2376'
     DOCKER_MACHINE_NAME = 'node-1'
