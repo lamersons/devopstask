@@ -22,7 +22,7 @@ pipeline {
     stage('test_countries') {
       steps {
         sh '''docker pull lamersons/countries:assembly-1.0.1
-docker service create --name countries_test -p9080:8080 --mount type=bind,source=/hosthome/shared_drive/countries/,destination=/opc lamersons/countries:assembly-1.0.1'''
+docker service create --health-cmd "curl http://127.0.0.1:8080/health/ready" --health-interval 15s --health-retries 10 --name countries_test -p9080:8080 --mount type=bind,source=/hosthome/shared_drive/countries/,destination=/opc lamersons/countries:assembly-1.0.1'''
       }
     }
   }
