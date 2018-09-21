@@ -11,7 +11,7 @@ pipeline {
 '''
           }
         }
-        stage('build_airports') {
+        stage('build_airports_1_0_1') {
           steps {
             echo 'air'
             sh '''docker build -t lamersons/airports:assembly-1.0.1 -f Dockerfile-airports .
@@ -20,7 +20,7 @@ docker push lamersons/airports:assembly-1.0.1
 '''
           }
         }
-        stage('build_airport_upd') {
+        stage('build_airport_1_1_0') {
           steps {
             echo 'rrr'
             sh '''docker build -t lamersons/airports:assembly-1.1.0 -f Dockerfile-airports .
@@ -41,7 +41,7 @@ docker service create --health-cmd "curl http://127.0.0.1:8080/health/ready" --h
 docker service rm countries_test > /dev/null 2>&1 &'''
           }
         }
-        stage('test_airports') {
+        stage('test_airports_1_0_1') {
           steps {
             sh '''docker pull lamersons/airports:assembly-1.0.1
 docker service rm airports_test > /dev/null 2>&1 &
@@ -49,12 +49,12 @@ docker service create --health-cmd "curl http://127.0.0.1:8080/health/ready" --h
 docker service rm airports_test > /dev/null 2>&1 &'''
           }
         }
-        stage('test_airport_upd') {
+        stage('test_airport_1_1_0') {
           steps {
             sh '''docker pull lamersons/airports:assembly-1.1.0
-docker service rm airports_test > /dev/null 2>&1 &
+docker service rm airports_test_1_1_0 > /dev/null 2>&1 &
 docker service create --health-cmd "curl http://127.0.0.1:8080/health/ready" --health-interval 15s --health-retries 10 --name airports_test_1_1_0 --mount type=bind,source=/hosthome/shared_drive/airports/,destination=/opc lamersons/airports:assembly-1.1.0
-docker service rm airports_test > /dev/null 2>&1 &'''
+docker service rm airports_test_1_1_0 > /dev/null 2>&1 &'''
           }
         }
       }
@@ -64,15 +64,20 @@ docker service rm airports_test > /dev/null 2>&1 &'''
         stage('prod_countries') {
           steps {
             sh '''docker pull lamersons/countries:assembly-1.0.1
-docker service rm countries > /dev/null 2>&1 &
+
 docker service create --health-cmd "curl http://127.0.0.1:8080/health/ready" --health-interval 15s --health-retries 10 --name countries --mount type=bind,source=/hosthome/shared_drive/countries/,destination=/opc lamersons/countries:assembly-1.0.1'''
           }
         }
-        stage('prod_airports') {
+        stage('prod_airports_1_0_1') {
           steps {
             sh '''docker pull lamersons/airports:assembly-1.0.1
-docker service rm airports  > /dev/null 2>&1 &
 docker service create --health-cmd "curl http://127.0.0.1:8080/health/ready" --health-interval 15s --health-retries 10 --name airports --mount type=bind,source=/hosthome/shared_drive/airports/,destination=/opc lamersons/airports:assembly-1.0.1'''
+          }
+        }
+        stage('prod_airports_1_1_0') {
+          steps {
+            sh '''docker pull lamersons/airports:assembly-1.1.0
+docker service create --health-cmd "curl http://127.0.0.1:8080/health/ready" --health-interval 15s --health-retries 10 --name airports --mount type=bind,source=/hosthome/shared_drive/airports/,destination=/opc lamersons/airports:assembly-1.1.0'''
           }
         }
       }
