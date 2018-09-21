@@ -86,7 +86,7 @@ docker service create --health-cmd "curl http://127.0.0.1:8080/health/ready" --h
   environment {
     DOCKER_CERT_PATH = '.'
     DOCKER_TLS_VERIFY = '1'
-    DOCKER_HOST = 'tcp://192.168.99.134:2376'
+    DOCKER_HOST = 'tcp://192.168.99.100:2376'
     DOCKER_MACHINE_NAME = 'node-1'
   }
 }
