@@ -58,9 +58,9 @@ docker service create --health-cmd "curl http://127.0.0.1:8080/health/ready" --h
         }
         stage('prod_airports') {
           steps {
-            sh '''docker pull lamersons/airports -1.0.1
+            sh '''docker pull lamersons/airports-1.0.1
 docker service rm airports  > /dev/null 2>&1 &
-docker service create --health-cmd "curl http://127.0.0.1:8080/health/ready" --health-interval 15s --health-retries 10 --name airports --mount type=bind,source=/hosthome/shared_drive/airports /,destination=/opc lamersons/airports :assembly-1.0.1'''
+docker service create --health-cmd "curl http://127.0.0.1:8080/health/ready" --health-interval 15s --health-retries 10 --name airports --mount type=bind,source=/hosthome/shared_drive/airports /,destination=/opc lamersons/airports:assembly-1.0.1'''
           }
         }
       }
