@@ -1,0 +1,21 @@
+docker build -t lamersons/airports:assembly-1.0.1 -f Dockerfile-airports .
+docker login -u lamersons -p lpad17
+docker push lamersons/airports:assembly-1.0.1
+
+docker network create \
+  --driver overlay \
+  --subnet=10.11.0.0/16 \
+  --internal
+  --opt com.docker.network.driver.mtu=1200 \
+  overlay-ingress
+
+
+export APPLICATION="airports"
+export RELEASE="1.0.1"
+
+export APPLICATION="countries"
+export countries="1.0.1"
+
+docker build --build-arg APPLICATION=${APPLICATION} --build-arg RELEASE=${RELEASE} -t lamersons/${APPLICATION}-assembly:${RELEASE} .
+
+docker stack deploy -c deploy_countries.yml up

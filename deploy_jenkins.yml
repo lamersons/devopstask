@@ -1,0 +1,19 @@
+version: "3.2"
+services:
+  jenkins:
+    image: jenkinsci/blueocean
+    healthcheck:
+      disable: true
+    volumes:
+      - type: bind
+        source: /hosthome/shared_drive/jenkins_home/
+        target: /var/jenkins_home
+    deploy:
+      replicas: 2
+      restart_policy:
+        condition: on-failure
+        delay: 5s
+        max_attempts: 3
+        window: 120s
+    ports:
+      - "9999:8080"

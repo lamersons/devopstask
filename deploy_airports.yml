@@ -1,0 +1,28 @@
+version: "3.2"
+services:
+  airports:
+    image: lamersons/airports-assembly:${RELEASE}
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://127.0.0.1:8080/health/ready"]
+      # start_period: 30s
+      interval: 5s
+      timeout: 10s
+      retries: 20
+    deploy:
+      replicas: 3
+      restart_policy:
+        condition: on-failure
+        delay: 5s
+        max_attempts: 3
+        window: 120s
+    networks:
+      - "airports_overlay"
+
+networks:
+  airports_overlay:
+    driver: "overlay"
+    attachable: true
+    internal: true
+    ipam:
+     config:
+       - subnet: 10.12.0.0/16
