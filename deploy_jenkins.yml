@@ -1,4 +1,4 @@
-version: "3.2"
+version: "3.7"
 services:
   jenkins:
     image: jenkinsci/blueocean
@@ -8,7 +8,12 @@ services:
       - type: bind
         source: /hosthome/shared_drive/jenkins_home/
         target: /var/jenkins_home
+      - type: bind
+        source: /hosthome/shared_drive/nginx/conf/conf.d
+        target: /opt/nginx/conf/conf.d
     deploy:
+      labels:
+        com.docker.stack.namespace: jenkins
       replicas: 2
       restart_policy:
         condition: on-failure

@@ -1,4 +1,4 @@
-version: "3.2"
+version: "3.7"
 services:
   countries:
     image: lamersons/countries-assembly:${RELEASE}
@@ -9,6 +9,8 @@ services:
       timeout: 10s
       retries: 20
     deploy:
+      labels:
+        com.docker.stack.namespace: countries-assembly:${RELEASE}
       replicas: 3
       restart_policy:
         condition: on-failure
@@ -20,6 +22,7 @@ services:
 
 networks:
   countries_overlay:
+    name: countries
     driver: "overlay"
     attachable: true
     internal: true
