@@ -7,8 +7,14 @@ pipeline {
         sh '''export APPLICATION="countries"
 export RELEASE="1.0.1"
 
+docker login -u lamersons -p lpad17
+
 docker build --build-arg APPLICATION=${APPLICATION} --build-arg RELEASE=${RELEASE} -t lamersons/${APPLICATION}-assembly:${RELEASE} .
-docker stack deploy -c deploy_countries.yml up'''
+docker push lamersons/${APPLICATION}-assembly:${RELEASE}
+docker pull lamersons/${APPLICATION}-assembly:${RELEASE}
+docker stack deploy -c deploy_countries.yml up
+
+'''
       }
     }
   }
