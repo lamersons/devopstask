@@ -3,7 +3,7 @@ pipeline {
   stages {
     stage('deploy_rproxy') {
       steps {
-        sh 'docker stack deploy -c deploy_nginx.yml up'
+        sh 'docker stack deploy -c deploy_nginx.yml shared_service'
       }
     }
     stage('deploy_countries') {
@@ -16,7 +16,8 @@ pipeline {
                   docker build --build-arg APPLICATION=${APPLICATION} --build-arg RELEASE=${RELEASE} -t lamersons/${APPLICATION}-assembly:${RELEASE} .
                   docker push lamersons/${APPLICATION}-assembly:${RELEASE}
                   docker pull lamersons/${APPLICATION}-assembly:${RELEASE}
-                  docker stack deploy -c deploy_${APPLICATION}.yml up'''
+                  docker stack deploy -c deploy_${APPLICATION}.yml c_up1
+                  '''
           }
         }
         stage('deploy_airports') {
@@ -27,7 +28,7 @@ pipeline {
                   docker build --build-arg APPLICATION=${APPLICATION} --build-arg RELEASE=${RELEASE} -t lamersons/${APPLICATION}-assembly:${RELEASE} .
                   docker push lamersons/${APPLICATION}-assembly:${RELEASE}
                   docker pull lamersons/${APPLICATION}-assembly:${RELEASE}
-                  docker stack deploy -c deploy_${APPLICATION}.yml up
+                  docker stack deploy -c deploy_${APPLICATION}.yml a_up1
                   '''
           }
         }

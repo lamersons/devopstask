@@ -12,28 +12,37 @@ services:
       labels:
         com.docker.stack.namespace: nginx
       replicas: 2
-      # restart_policy:
-      #   condition: on-failure
+      restart_policy:
+        condition: on-failure
+        delay: 5s
+        max_attempts: 30
+        window: 120s
     ports:
       - "8000:8000"
     networks:
       - countries_overlay
       - airports_overlay
-
 networks:
-  countries_overlay:
-    name: countries
-    driver: "overlay"
-    attachable: true
-    internal: true
-    ipam:
-     config:
-       - subnet: 10.11.0.0/16
   airports_overlay:
-    name: airports
-    driver: "overlay"
-    attachable: true
-    internal: true
-    ipam:
-     config:
-       - subnet: 10.12.0.0/16
+    external:
+      name: airports
+  countries_overlay:
+    external:
+      name: countries
+# networks:
+#   countries_overlay:
+#     name: countries
+#     driver: "overlay"
+#     attachable: true
+#     internal: true
+#     ipam:
+#      config:
+#        - subnet: 10.11.0.0/16
+#   airports_overlay:
+#     name: airports
+#     driver: "overlay"
+#     attachable: true
+#     internal: true
+#     ipam:
+#      config:
+#        - subnet: 10.12.0.0/16

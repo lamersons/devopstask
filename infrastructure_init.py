@@ -40,6 +40,14 @@ def set_swarm_env():
 def install_jenkins():
     print(exec_cmd(["docker", "stack", "deploy", "-c", APP_ROOT + "/deploy_jenkins.yml", "up"]))
 
+def create_docker_networks():
+    def check_if_network_exists(network_name):
+        exec_cmd(["docker", "network", "ls", "-f", "Name=" + network_name])
+    if check_if_network_exists("countries"):
+        exec_cmd(["docker", "network", "create", "--subnet"", 10.11.0.0/16", "--drive", "overlay", "--attachable", "--internal", "countries"])
+    elif check_if_network_exists("airports"):
+    exec_cmd(["docker", "network", "create", -"-subne"t "10.12.0.0/16", "--driver", "overlay", "--attachable", "--internal", "airports"])
+
 if __name__ == "__main__":
     create_nodes(MANAGER_COUNT + WORKER_COUNT)
     set_swarm_env()

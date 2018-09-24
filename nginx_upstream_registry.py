@@ -45,7 +45,7 @@ def generate_upstream_config(service_name):
                             "-f", "{{range .Endpoint.VirtualIPs}}{{.Addr}}{{end}}"]).split("/")[0]
 
     if validate_ip(upstream_vip):
-        upstream_entry = "server {0}:8080".format(upstream_vip)
+        upstream_entry = "server {0}:8080;".format(upstream_vip)
         with open(UPSTREAM_FILE_PATH + service_name, "r+") as f:
             for l in f.readlines():
                 if upstream_entry != l:
