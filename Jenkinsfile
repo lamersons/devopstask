@@ -1,20 +1,13 @@
 pipeline {
   agent any
   stages {
-    stage('build_countries') {
+    stage('deploy_countries') {
       steps {
         echo 'hello'
         sh '''export APPLICATION="countries"
 export RELEASE="1.0.1"
 
-docker login -u lamersons -p lpad17
-docker push lamersons/${APPLICATION}-assembly:${RELEASE}
-'''
-      }
-    }
-    stage('deploy_countries') {
-      steps {
-        sh '''docker pull lamersons/${APPLICATION}-assembly:${RELEASE}
+docker build --build-arg APPLICATION=${APPLICATION} --build-arg RELEASE=${RELEASE} -t lamersons/${APPLICATION}-assembly:${RELEASE} .
 docker stack deploy -c deploy_countries.yml up'''
       }
     }
