@@ -1,9 +1,22 @@
+# -*- coding: utf-8 -*-
+##############################################################################
+# deps: docker > 18, API > 1.29, compose > 3.5
+# Author: MiZo <misha3@gmail.com>
+#
+# Lunatech DevOps challange
+#
+##############################################################################
+
 import os
 import sys
 from subprocess import Popen, PIPE, STDOUT
 import socket
 
 UPSTREAM_FILE_PATH = "/home/shared_drive/nginx/conf/conf.d/"
+APPLICATIONS = ["countries", "airports"]
+
+BUILD_ROOT = os.path.dirname(os.path.realpath(__file__))
+KEYS_ROOT = os.path.dirname(os.path.realpath(__file__)) + "/keys"
 
 def set_evn_vars():
     os.environ["DOCKER_API_VERSION"] = "1.29"
@@ -19,6 +32,19 @@ def exec_cmd(cmd):
         print("executing remote cmd: [{}]".format(" ".join(cmd)))
         return x.stdout.read().decode("UTF-8") or x.stderr.read().decode("UTF-8")
 
+#1 or 2
+def switch_upstream(application, int):
+    if application in APPLICATIONS:
+        proxy_pass_entry = "proxy_pass http://{0}_upstream_{1};".format(application, int)
+        with open(UPSTREAM_FILE_PATH + application+"_proxy_pass", "r+") as f:
+            for l in f.readlines():
+                if proxy_pass_entry != l:
+                    print("switching upstream to {0}_upstream_{1}".format(ARGS[1], ARGS[2]))
+                    f.seek(0, 0)
+                    f.truncate(0)
+                    f.write(proxy_pass_entry)
+    else: sys.exit("application is not recognized")
+
 def reload_nginx_config(nginx_container_list):
     for n in nginx_container_list:
         task_id = n.split(" ")[0]
@@ -33,10 +59,9 @@ def get_container_list(service_name):
     r = exec_cmd(["docker", "service", "ps", service_name,
                   "--format", "'{{.ID}} {{.Node}}'", "-f", "desired-state=Running"])
     r = [n[1:-1] for n in r.split("\n") if "such service" not in n and n != ""]
-    return r if r != "" else ""
+    return r if r != "" else None
 
 def generate_upstream_config(service_name):
-
     def validate_ip(ip):
         try: return 1 if socket.inet_aton(ip) else 0
         except socket.error: return 0
@@ -53,23 +78,47 @@ def generate_upstream_config(service_name):
                     f.truncate(0)
                     f.write(upstream_entry)
 
+if __name__ == "__main__":
+    SWARM_INIT_NODE = "node-1"
+    SWARM_MASTER_STATUS = exec_cmd(["docker-machine", "status", SWARM_INIT_NODE])
+    SWARM_MASTER_IP = exec_cmd(["docker-machine", "inspect", SWARM_INIT_NODE,
+    "-f", "'{{.Driver.IPAddress}}'"])[1:-2]
 
-BUILD_ROOT = os.path.dirname(os.path.realpath(__file__))
-KEYS_ROOT = os.path.dirname(os.path.realpath(__file__)) + "/keys"
+    set_evn_vars()
 
-SWARM_INIT_NODE = "node-1"
-SWARM_MASTER_STATUS = exec_cmd(["docker-machine", "status", SWARM_INIT_NODE])
-SWARM_MASTER_IP = exec_cmd(["docker-machine", "inspect", SWARM_INIT_NODE,
-                            "-f", "'{{.Driver.IPAddress}}'"])[1:-2]
+    NGINX_CONTAINER_LIST = get_container_list("shared_service_nginx")
+    CMD_LIST = ["switch_upstream"]
+    ARGS = sys.argv[1:]
 
-set_evn_vars()
+    if len(ARGS) == 3: # and ARGS[1] == "switch_upstream" and ARGS[1] in CMD_LIST :
+        switch_upstream(ARGS[1], ARGS[2])
 
-generate_upstream_config("c_up1_countries")
-generate_upstream_config("c_up2_countries")
-generate_upstream_config("a_up1_airports")
-generate_upstream_config("a_up2_airports")
+    generate_upstream_config("c_up1_countries")
+    generate_upstream_config("c_up2_countries")
+    generate_upstream_config("a_up1_airports")
+    generate_upstream_config("a_up2_airports")
 
-NGINX_CONTAINER_LIST = get_container_list("shared_service_nginx")
-r = [r for r in list(reload_nginx_config(NGINX_CONTAINER_LIST)) if not "process started" in r]
-if r != "":
-    for line in r: print(line)
+    r = [r for r in list(reload_nginx_config(NGINX_CONTAINER_LIST)) if not "process started" in r]
+    if r != "":
+        for line in r: print(line)
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

@@ -1,3 +1,12 @@
+# -*- coding: utf-8 -*-
+##############################################################################
+#
+# Author: MiZo <misha3@gmail.com>
+#
+# Lunatech DevOps challange
+#
+##############################################################################
+
 FROM openjdk:8-jre-alpine
 LABEL maintainer "itsNotMyCode"
 

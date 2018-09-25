@@ -1,3 +1,12 @@
+# -*- coding: utf-8 -*-
+##############################################################################
+# deps: docker > 18, API > 1.29, compose > 3.5
+# Author: MiZo <misha3@gmail.com>
+#
+# Lunatech DevOps challange
+#
+##############################################################################
+
 import os
 import sys
 from subprocess import Popen, PIPE, STDOUT
@@ -38,15 +47,19 @@ def set_swarm_env():
     for l in env: os.environ[l.split("=")[0]] = l.split("=")[1].replace("\"","")
 
 def install_jenkins():
-    print(exec_cmd(["docker", "stack", "deploy", "-c", APP_ROOT + "/deploy_jenkins.yml", "up"]))
+    print(exec_cmd(["docker", "stack", "deploy", "-c", APP_ROOT + "/deploy_jenkins.yml", "shared_service"]))
 
 def create_docker_networks():
     def check_if_network_exists(network_name):
-        exec_cmd(["docker", "network", "ls", "-f", "Name=" + network_name])
-    if check_if_network_exists("countries"):
-        exec_cmd(["docker", "network", "create", "--subnet"", 10.11.0.0/16", "--drive", "overlay", "--attachable", "--internal", "countries"])
-    elif check_if_network_exists("airports"):
-    exec_cmd(["docker", "network", "create", -"-subne"t "10.12.0.0/16", "--driver", "overlay", "--attachable", "--internal", "airports"])
+        r = exec_cmd(["docker", "network", "ls", "-f", "name=" + network_name])
+        return 1 if len(r) != 66 else 0
+
+    if not check_if_network_exists("countries"):
+        print(exec_cmd(["docker", "network", "create", "--subnet", "10.11.0.0/16",
+                "--driver", "overlay", "--attachable", "--internal", "countries"]))
+    if not check_if_network_exists("airports"):
+        print(exec_cmd(["docker", "network", "create", "--subnet", "10.12.0.0/16",
+                "--driver", "overlay", "--attachable", "--internal", "airports"]))
 
 if __name__ == "__main__":
     create_nodes(MANAGER_COUNT + WORKER_COUNT)
@@ -54,4 +67,5 @@ if __name__ == "__main__":
     if not "Swarm: active" in exec_cmd(["docker", "info"]): init_swarm()
     for manager in NODE_LIST[1:MANAGER_COUNT]: add_swarm_manager(manager)
     for worker in NODE_LIST[MANAGER_COUNT:]: add_swarm_worker(worker)
+    create_docker_networks()
     install_jenkins()

@@ -1,0 +1,1 @@
+proxy_pass http://airports_upstream_2;

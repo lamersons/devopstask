@@ -1,3 +1,12 @@
+# -*- coding: utf-8 -*-
+##############################################################################
+# deps: docker-compose > 3.5
+# Author: MiZo <misha3@gmail.com>
+#
+# Lunatech DevOps challange
+#
+##############################################################################
+
 version: "3.7"
 services:
   nginx:
