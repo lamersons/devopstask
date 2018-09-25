@@ -10,7 +10,7 @@
 version: "3.7"
 services:
   jenkins:
-    image: jenkinsci/blueocean
+    image: lamersons/blueocean
     healthcheck:
       disable: true
     volumes:
@@ -23,7 +23,7 @@ services:
     deploy:
       labels:
         com.docker.stack.namespace: jenkins
-      replicas: 2
+      replicas: 1
       restart_policy:
         condition: on-failure
         delay: 5s
