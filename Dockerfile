@@ -3,7 +3,7 @@
 #
 # Author: MiZo <misha3@gmail.com>
 #
-# Lunatech DevOps challange
+# Lunatech DevOps challenge
 #
 ##############################################################################
 

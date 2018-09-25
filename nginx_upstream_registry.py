@@ -3,7 +3,7 @@
 # deps: docker > 18, API > 1.29, compose > 3.5
 # Author: MiZo <misha3@gmail.com>
 #
-# Lunatech DevOps challange
+# Lunatech DevOps challenge
 #
 ##############################################################################
 
