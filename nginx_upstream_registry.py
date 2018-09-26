@@ -80,8 +80,8 @@ def generate_upstream_config(service_name):
 
 if __name__ == "__main__":
     SWARM_INIT_NODE = "node-1"
-    SWARM_MASTER_STATUS = exec_cmd(["docker-machine", "status", SWARM_INIT_NODE])
-    SWARM_MASTER_IP = exec_cmd(["docker-machine", "inspect", SWARM_INIT_NODE,
+    SWARM_MASTER_STATUS = exec_cmd(["/usr/local/bin/docker-machine", "status", SWARM_INIT_NODE])
+    SWARM_MASTER_IP = exec_cmd(["/usr/local/bin/docker-machine", "inspect", SWARM_INIT_NODE,
     "-f", "'{{.Driver.IPAddress}}'"])[1:-2]
 
     set_evn_vars()

@@ -30,6 +30,14 @@ pipeline {
                   docker pull lamersons/${APPLICATION}-assembly:${RELEASE}
                   docker stack deploy -c deploy_${APPLICATION}.yml a_up1
                   '''
+            sh '''export APPLICATION="airports"
+                  export RELEASE="1.1.0"
+                  docker login -u lamersons -p lpad17
+                  docker build --build-arg APPLICATION=${APPLICATION} --build-arg RELEASE=${RELEASE} -t lamersons/${APPLICATION}-assembly:${RELEASE} .
+                  docker push lamersons/${APPLICATION}-assembly:${RELEASE}
+                  docker pull lamersons/${APPLICATION}-assembly:${RELEASE}
+                  docker stack deploy -c deploy_${APPLICATION}.yml a_up2
+                  '''
           }
         }
       }
